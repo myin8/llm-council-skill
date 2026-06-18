@@ -1,0 +1,49 @@
+[project]
+name = "llm-council-skill"
+version = "1.0.0"
+description = "Multi-model deliberation system for Claude Code"
+readme = "README.md"
+requires-python = ">=3.10"
+license = {text = "MIT"}
+authors = [
+    {name = "Your Name", email = "your.email@example.com"}
+]
+keywords = ["claude-code", "llm", "multi-model", "deliberation", "ai"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
+dependencies = [
+    "httpx>=0.27.0",
+    "python-dotenv>=1.0.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/yourusername/llm-council-skill"
+Documentation = "https://github.com/yourusername/llm-council-skill/blob/main/README.md"
+Repository = "https://github.com/yourusername/llm-council-skill"
+Issues = "https://github.com/yourusername/llm-council-skill/issues"
+
+[project.scripts]
+llm-council = "council_run:cli_main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["council"]
+
+[tool.hatch.build]
+include = [
+    "council/*.py",
+    ".claude/skills/**/*.md",
+    "*.md",
+    ".env.example",
+]
