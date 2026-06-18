@@ -5,7 +5,7 @@
 set -e
 
 INSTALL_DIR="${HOME}/s/llm-council-skill"
-REPO_URL="https://github.com/yourusername/llm-council-skill"  # Update with actual repo URL
+REPO_URL="https://github.com/myin8/llm-council-skill"
 
 echo "=================================================="
 echo "  LLM Council Skill Installer"

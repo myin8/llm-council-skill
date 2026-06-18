@@ -17,13 +17,13 @@ The anonymization in Stage 2 prevents models from playing favorites when ranking
 ### Quick Install (Recommended)
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/yourusername/llm-council-skill/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/myin8/llm-council-skill/main/install.sh | bash
 ```
 
 Or manually:
 
 ```bash
-git clone https://github.com/yourusername/llm-council-skill ~/s/llm-council-skill
+git clone https://github.com/myin8/llm-council-skill ~/s/llm-council-skill
 cd ~/s/llm-council-skill
 cp .env.example .env
 # Edit .env and add your OPENROUTER_API_KEY

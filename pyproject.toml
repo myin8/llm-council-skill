@@ -25,10 +25,10 @@ dependencies = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/yourusername/llm-council-skill"
-Documentation = "https://github.com/yourusername/llm-council-skill/blob/main/README.md"
-Repository = "https://github.com/yourusername/llm-council-skill"
-Issues = "https://github.com/yourusername/llm-council-skill/issues"
+Homepage = "https://github.com/myin8/llm-council-skill"
+Documentation = "https://github.com/myin8/llm-council-skill/blob/main/README.md"
+Repository = "https://github.com/myin8/llm-council-skill"
+Issues = "https://github.com/myin8/llm-council-skill/issues"
 
 [project.scripts]
 llm-council = "council_run:cli_main"
