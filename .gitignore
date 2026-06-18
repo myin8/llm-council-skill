@@ -12,6 +12,9 @@ build/
 dist/
 *.egg-info/
 
+# UV lock file (excluded to avoid committing internal registry URLs)
+uv.lock
+
 # Environment
 .env
 
