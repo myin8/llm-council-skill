@@ -24,7 +24,7 @@ llm-council/
 
 **Total:** ~2000+ lines of code across backend + frontend
 
-### Skill Version (`~/s/llm-council-skill/`)
+### Skill Version (`~/.local/share/llm-council-skill/`)
 ```
 llm-council-skill/
 ├── .claude/skills/llm-council/

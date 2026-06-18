@@ -6,7 +6,7 @@ A standalone Claude Code skill extracted from the LLM Council web app. The skill
 
 ## Project Location
 
-`~/s/llm-council-skill/`
+`~/.local/share/llm-council-skill/`
 
 ## Key Features
 
@@ -20,7 +20,7 @@ A standalone Claude Code skill extracted from the LLM Council web app. The skill
 ## Architecture
 
 ```
-~/s/llm-council-skill/
+~/.local/share/llm-council-skill/
 ├── .claude/skills/llm-council/SKILL.md  # Skill definition for Claude Code
 ├── council/
 │   ├── __init__.py                      # Package marker
@@ -65,7 +65,7 @@ results = await query_models_parallel(COUNCIL_MODELS, messages)
 ### Command Line
 
 ```bash
-cd ~/s/llm-council-skill
+cd ~/.local/share/llm-council-skill
 
 # Full deliberation
 uv run python council_run.py "What is the CAP theorem?"
@@ -102,7 +102,7 @@ Claude Code will:
 1. Get OpenRouter API key from https://openrouter.ai/keys
 2. Create `.env` file:
    ```bash
-   cd ~/s/llm-council-skill
+   cd ~/.local/share/llm-council-skill
    cp .env.example .env
    # Edit .env and add: OPENROUTER_API_KEY=your_key_here
    ```
@@ -128,7 +128,7 @@ All overridable via CLI flags.
 All structural tests pass:
 
 ```bash
-cd ~/s/llm-council-skill
+cd ~/.local/share/llm-council-skill
 python test_structure.py
 ```
 

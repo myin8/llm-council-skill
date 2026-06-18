@@ -100,7 +100,7 @@ cp .env.example .env
 
 **Quick stage 1 test (fast, verifies connectivity):**
 ```bash
-cd ~/s/llm-council-skill
+cd ~/.local/share/llm-council-skill
 uv run python council_run.py "What is 2+2?" --stages 1
 ```
 

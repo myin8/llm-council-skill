@@ -25,7 +25,7 @@ Run a 3-stage multi-model deliberation process where different LLMs collaborativ
 When the user wants a multi-model perspective on a question:
 
 ```bash
-cd ~/s/llm-council-skill
+cd ~/.local/share/llm-council-skill
 uv run python council_run.py "<user's question>" [options]
 ```
 
@@ -105,13 +105,13 @@ The script outputs structured JSON to stdout:
 
 ## Environment Setup
 
-The skill requires `OPENROUTER_API_KEY` in a `.env` file in `~/s/llm-council-skill/.env`. If missing, the script will fail with an authentication error.
+The skill requires `OPENROUTER_API_KEY` in a `.env` file in `~/.local/share/llm-council-skill/.env`. If missing, the script will fail with an authentication error.
 
 ## Quick Test
 
 To verify setup:
 ```bash
-cd ~/s/llm-council-skill
+cd ~/.local/share/llm-council-skill
 uv run python council_run.py "What is 2+2?" --stages 1
 ```
 

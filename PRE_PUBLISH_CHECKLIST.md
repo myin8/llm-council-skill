@@ -173,8 +173,8 @@ curl -fsSL https://raw.githubusercontent.com/ACTUAL-USERNAME/llm-council-skill/m
 
 **Manual install:**
 ```bash
-git clone https://github.com/ACTUAL-USERNAME/llm-council-skill ~/s/llm-council-skill
-cd ~/s/llm-council-skill
+git clone https://github.com/ACTUAL-USERNAME/llm-council-skill ~/.local/share/llm-council-skill
+cd ~/.local/share/llm-council-skill
 cp .env.example .env
 # Add OPENROUTER_API_KEY to .env
 uv sync

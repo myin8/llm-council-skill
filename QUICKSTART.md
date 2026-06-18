@@ -5,7 +5,7 @@ Get the LLM Council skill running in 3 steps.
 ## 1. Add API Key
 
 ```bash
-cd ~/s/llm-council-skill
+cd ~/.local/share/llm-council-skill
 cp .env.example .env
 ```
 

@@ -45,7 +45,7 @@ The LLM Council Skill has been successfully packaged as a distributable Claude C
 
 - **install.sh:**
   - One-command installation script
-  - Clones repo to `~/s/llm-council-skill`
+  - Clones repo to `~/.local/share/llm-council-skill`
   - Sets up .env from template
   - Installs dependencies with uv or pip fallback
   - Clear post-install instructions
@@ -95,7 +95,7 @@ uv run python -c "from council import run_full_council; print('OK')"
 
 # Test install script (in a test directory)
 cd /tmp
-bash ~/s/llm-council-skill/install.sh
+bash ~/.local/share/llm-council-skill/install.sh
 ```
 
 ### 2. Publish to GitHub
@@ -149,8 +149,8 @@ curl -fsSL https://raw.githubusercontent.com/yourusername/llm-council-skill/main
 
 **Manual installation:**
 ```bash
-git clone <repo-url> ~/s/llm-council-skill
-cd ~/s/llm-council-skill
+git clone <repo-url> ~/.local/share/llm-council-skill
+cd ~/.local/share/llm-council-skill
 cp .env.example .env
 # Add OPENROUTER_API_KEY to .env
 uv sync

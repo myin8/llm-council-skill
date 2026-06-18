@@ -4,8 +4,8 @@
 
 ```bash
 # 1. Clone the repository
-git clone <repository-url> ~/s/llm-council-skill
-cd ~/s/llm-council-skill
+git clone <repository-url> ~/.local/share/llm-council-skill
+cd ~/.local/share/llm-council-skill
 
 # 2. Create environment file
 cp .env.example .env
@@ -20,7 +20,7 @@ uv sync
 ### Method 1: UV (Recommended)
 
 ```bash
-cd ~/s/llm-council-skill
+cd ~/.local/share/llm-council-skill
 uv sync
 ```
 
@@ -29,7 +29,7 @@ This creates a virtual environment and installs all dependencies.
 ### Method 2: pip
 
 ```bash
-cd ~/s/llm-council-skill
+cd ~/.local/share/llm-council-skill
 python -m venv .venv
 source .venv/bin/activate  # On Windows: .venv\Scripts\activate
 pip install -r requirements.txt
@@ -38,7 +38,7 @@ pip install -r requirements.txt
 ### Method 3: System-wide Install
 
 ```bash
-cd ~/s/llm-council-skill
+cd ~/.local/share/llm-council-skill
 pip install -e .
 ```
 
@@ -58,7 +58,7 @@ Expected output: JSON structure with stage1, stage2, and stage3 keys.
 
 ## Claude Code Integration
 
-The skill is automatically available if installed at `~/s/llm-council-skill/`.
+The skill is automatically available if installed at `~/.local/share/llm-council-skill/`.
 
 Invoke with:
 - "Ask the council: [your question]"
@@ -112,7 +112,7 @@ Free tier includes:
 ## Directory Structure
 
 ```
-~/s/llm-council-skill/
+~/.local/share/llm-council-skill/
 ├── .claude/
 │   └── skills/
 │       └── llm-council/

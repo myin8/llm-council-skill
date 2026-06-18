@@ -45,8 +45,8 @@ llm-council-skill/
 
 **Installation:**
 ```bash
-git clone <repo-url> ~/s/llm-council-skill
-cd ~/s/llm-council-skill
+git clone <repo-url> ~/.local/share/llm-council-skill
+cd ~/.local/share/llm-council-skill
 cp .env.example .env
 # Add OPENROUTER_API_KEY to .env
 uv sync
@@ -151,7 +151,7 @@ claude skill install llm-council
 
 ```bash
 # 1. Test CLI directly
-cd ~/s/llm-council-skill
+cd ~/.local/share/llm-council-skill
 uv run python council_run.py "What is 2+2?" --stages 1
 
 # 2. Test full 3-stage run
@@ -177,7 +177,7 @@ llm-council "Test query" --stages 1
 
 1. **Install skill:**
    ```bash
-   cd ~/s/llm-council-skill
+   cd ~/.local/share/llm-council-skill
    ```
 
 2. **Test triggers in Claude Code:**

@@ -46,11 +46,11 @@ triggers:
 
 ### Option 1: Git Repository (Current)
 
-Users clone the entire repository to `~/s/llm-council-skill/`:
+Users clone the entire repository to `~/.local/share/llm-council-skill/`:
 
 ```bash
-git clone <repo-url> ~/s/llm-council-skill
-cd ~/s/llm-council-skill
+git clone <repo-url> ~/.local/share/llm-council-skill
+cd ~/.local/share/llm-council-skill
 cp .env.example .env
 # Add OPENROUTER_API_KEY to .env
 uv sync
@@ -111,7 +111,7 @@ claude skill install llm-council
 # install.sh
 set -e
 
-INSTALL_DIR="${HOME}/s/llm-council-skill"
+INSTALL_DIR="${HOME}/.local/share/llm-council-skill"
 
 echo "Installing LLM Council Skill to ${INSTALL_DIR}"
 
@@ -222,7 +222,7 @@ Before releasing:
 For users to update:
 
 ```bash
-cd ~/s/llm-council-skill
+cd ~/.local/share/llm-council-skill
 git pull
 uv sync  # Update dependencies if changed
 ```
