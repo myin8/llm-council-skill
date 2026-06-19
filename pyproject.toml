@@ -1,14 +1,14 @@
 [project]
 name = "llm-council-skill"
-version = "1.0.0"
-description = "Multi-model deliberation system for Claude Code"
+version = "1.2.0"
+description = "Portable Agent Skill for multi-model LLM deliberation"
 readme = "README.md"
 requires-python = ">=3.10"
 license = {text = "MIT"}
 authors = [
     {name = "Your Name", email = "your.email@example.com"}
 ]
-keywords = ["claude-code", "llm", "multi-model", "deliberation", "ai"]
+keywords = ["agent-skills", "codex", "claude-code", "llm", "multi-model", "deliberation", "ai"]
 classifiers = [
     "Development Status :: 4 - Beta",
     "Intended Audience :: Developers",
@@ -40,9 +40,21 @@ build-backend = "hatchling.build"
 [tool.hatch.build.targets.wheel]
 packages = ["council"]
 
+[tool.hatch.build.targets.wheel.force-include]
+"council_run.py" = "council_run.py"
+"scripts/run_council.py" = "scripts/run_council.py"
+"SKILL.md" = "SKILL.md"
+"agents/openai.yaml" = "agents/openai.yaml"
+".claude/skills/llm-council/SKILL.md" = ".claude/skills/llm-council/SKILL.md"
+".env.example" = ".env.example"
+
 [tool.hatch.build]
 include = [
     "council/*.py",
+    "council_run.py",
+    "scripts/*.py",
+    "SKILL.md",
+    "agents/*.yaml",
     ".claude/skills/**/*.md",
     "*.md",
     ".env.example",

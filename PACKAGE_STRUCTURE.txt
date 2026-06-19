@@ -1,84 +1,58 @@
-LLM Council Skill - Package Structure
-=====================================
+LLM Council Agent Skill - Package Structure
+===========================================
 
 llm-council-skill/
-│
-├── 📦 Core Package
+|
+├── Agent Skill
+│   ├── SKILL.md                     # Canonical Agent Skills entry point
+│   ├── agents/openai.yaml           # Codex/OpenAI UI metadata
+│   ├── scripts/run_council.py       # Bundled script entry point
+│   └── .claude/skills/llm-council/  # Legacy Claude compatibility mirror
+|
+├── Core Package
 │   ├── council/
-│   │   ├── __init__.py          # Package exports
-│   │   ├── config.py            # Default models & API config
-│   │   ├── openrouter.py        # HTTP client for OpenRouter
-│   │   └── deliberate.py        # 3-stage orchestration
-│   └── council_run.py           # CLI entry point
-│
-├── 🎯 Claude Code Integration
-│   └── .claude/
-│       └── skills/
-│           └── llm-council/
-│               └── SKILL.md     # Skill definition with triggers
-│
-├── 📝 Documentation
-│   ├── README.md                # Project overview
-│   ├── INSTALL.md               # Installation guide
-│   ├── QUICKSTART.md            # Usage examples
-│   ├── CLAUDE.md                # Architecture & design
-│   ├── PACKAGING.md             # Distribution guide
-│   ├── DISTRIBUTION.md          # Release checklist
-│   ├── PACKAGING_COMPLETE.md    # Status summary
-│   ├── COMPARISON.md            # vs. original web app
-│   ├── SUMMARY.md               # Project summary
-│   └── CHANGELOG.md             # Version history
-│
-├── ⚙️  Configuration
-│   ├── pyproject.toml           # Package metadata (PyPI-ready)
-│   ├── requirements.txt         # pip dependencies
-│   ├── MANIFEST.in              # Build includes
-│   ├── .env.example             # Environment template
-│   ├── .gitignore               # Git exclusions
-│   └── LICENSE                  # MIT License
-│
-└── 🚀 Installation
-    └── install.sh               # One-command installer
+│   │   ├── __init__.py
+│   │   ├── config.py
+│   │   ├── openrouter.py
+│   │   └── deliberate.py
+│   └── council_run.py
+|
+├── Documentation
+│   ├── README.md
+│   ├── INSTALL.md
+│   ├── QUICKSTART.md
+│   ├── CLAUDE.md
+│   ├── PACKAGING.md
+│   ├── DISTRIBUTION.md
+│   ├── PACKAGING_COMPLETE.md
+│   ├── COMPARISON.md
+│   ├── SUMMARY.md
+│   └── CHANGELOG.md
+|
+└── Configuration
+    ├── pyproject.toml
+    ├── requirements.txt
+    ├── MANIFEST.in
+    ├── .env.example
+    ├── .gitignore
+    └── LICENSE
 
-Distribution Methods:
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-✅ Git Repository (Primary)
-   • Clone to ~/s/llm-council-skill/
-   • One-line: curl ... | bash
-   • Easy updates: git pull
-
-🔄 PyPI Package (Optional)
-   • pip install llm-council-skill
-   • Console script: llm-council
-   • Standard Python package
-
-⏳ Plugin Registry (Future)
-   • claude skill install llm-council
-   • One-command install
-   • Auto-updates
-
-Usage:
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Usage
+=====
 
 CLI:
-  uv run python council_run.py "Your question" [--stages N] [--models ...]
+  uv run python scripts/run_council.py "Your question" [--stages N] [--models ...]
 
-Claude Code:
-  "Ask the council: Your question"
-  "Run a council deliberation on [topic]"
-  /llm-council
+Agent Skill:
+  Ask the council: Your question
+  Use $llm-council-skill to compare model perspectives on a topic
 
 Programmatic:
   from council import run_full_council
-  result = await run_full_council(query="...", models=[...])
+  result = await run_full_council(user_query="...", models=[...])
 
-Tests:
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Validation
+==========
 
-✅ Package imports: from council import run_full_council
-✅ CLI help: council_run.py --help
-✅ Quick run: council_run.py "What is 2+2?" --stages 1
-✅ Skill definition: .claude/skills/llm-council/SKILL.md exists
-
-Status: Ready for distribution 🎉
+  uv run python test_structure.py
+  uv run python scripts/run_council.py --help

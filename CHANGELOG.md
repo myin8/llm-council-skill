@@ -2,6 +2,17 @@
 
 All notable changes to the LLM Council Skill.
 
+## [1.2.0] - 2026-06-18
+
+### Changed
+- Converted the repository from a Claude-only skill layout to a portable Agent Skills layout.
+- Added root `SKILL.md` as the canonical skill entry point.
+- Added `agents/openai.yaml` metadata for Codex/OpenAI surfaces.
+- Added `scripts/run_council.py` as the conventional bundled script entry point.
+- Added `compatibility` metadata for runtime requirements.
+- Kept `.claude/skills/llm-council/SKILL.md` as a compatibility mirror.
+- Updated packaging metadata and docs to describe Codex and other Agent Skills-compatible clients.
+
 ## [1.1.0] - 2026-06-17
 
 ### Changed
@@ -27,7 +38,7 @@ All notable changes to the LLM Council Skill.
 - Initial release
 - 3-stage deliberation system (parallel responses → anonymous peer ranking → synthesis)
 - CLI interface with JSON output
-- Claude Code skill integration
+- Claude-specific skill integration
 - Parameterized model selection via CLI flags
 - Partial runs with `--stages` flag
 - Query from file support with `--query-file`

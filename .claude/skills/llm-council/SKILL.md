@@ -1,35 +1,35 @@
 ---
-skill: llm-council
-version: 1.0.0
-description: Multi-model deliberation system where LLMs collaboratively answer questions through 3 stages
-triggers:
-  - "ask the council"
-  - "council deliberation"
-  - "/llm-council"
+name: llm-council
+description: Run multi-model LLM council deliberations through OpenRouter. Use when the user asks for a council, multi-model comparison, peer-ranked model perspectives, or a synthesized answer that should combine several model responses.
+license: MIT
+compatibility: Requires Python 3.10+, project dependencies, OPENROUTER_API_KEY, and network access to OpenRouter.
+metadata:
+  version: "1.2.0"
 ---
 
-# LLM Council Skill
+# LLM Council
 
-Run a 3-stage multi-model deliberation process where different LLMs collaboratively answer a user's question.
+This is the Claude compatibility entry point. The canonical Agent Skill is the repository-root `SKILL.md`, which follows the Agent Skills specification for Codex and other coding agents.
 
-## Process Overview
+Run a three-stage multi-model deliberation process where different LLMs collaboratively answer a user's question.
 
-**Stage 1 - Parallel Responses:** Query multiple models independently with the same question
+## Process
 
-**Stage 2 - Anonymized Peer Review:** Each model evaluates and ranks the anonymized Stage 1 responses (prevents favoritism)
-
-**Stage 3 - Chairman Synthesis:** A designated chairman model synthesizes all responses and rankings into a final comprehensive answer
+- Stage 1: query multiple models independently with the same question.
+- Stage 2: ask models to evaluate and rank anonymized Stage 1 responses.
+- Stage 3: ask a chairman model to synthesize the responses and rankings.
 
 ## Usage
 
-When the user wants a multi-model perspective on a question:
+Start from the repository root, then run:
 
 ```bash
-cd ~/.local/share/llm-council-skill
-uv run python council_run.py "<user's question>" [options]
+uv run python scripts/run_council.py "<user's question>" [options]
 ```
 
-### Options
+If this compatibility skill was loaded from `.claude/skills/llm-council`, the repository root is three directories up from this file.
+
+## Options
 
 - `--stages N` — Run only stages 1 through N (default: 3)
   - `--stages 1` — Quick comparison of model responses (no ranking)
@@ -37,14 +37,12 @@ uv run python council_run.py "<user's question>" [options]
   - `--stages 3` — Full deliberation with final synthesis
 
 - `--models MODEL1,MODEL2,...` — Override default council models (comma-separated OpenRouter IDs)
-  - Default: `openai/gpt-5.1,google/gemini-3-pro-preview,anthropic/claude-sonnet-4.5`
 
 - `--chairman MODEL` — Override default chairman model
-  - Default: `google/gemini-3-pro-preview`
 
 - `--query-file FILE` — Read query from file (for longer prompts)
 
-### Output Format
+## Output Format
 
 The script outputs structured JSON to stdout:
 
@@ -54,25 +52,25 @@ The script outputs structured JSON to stdout:
   "models": ["model1", "model2", ...],
   "chairman_model": "...",
   "stage1": [
-    {"model": "openai/gpt-5.1", "response": "..."}
+    {"model": "model1", "response": "..."}
   ],
   "stage2": {
     "evaluations": [
       {"model": "...", "evaluation": "...", "parsed_ranking": ["Response C", "Response A", "Response B"]}
     ],
-    "label_to_model": {"Response A": "openai/gpt-5.1", ...},
+    "label_to_model": {"Response A": "model1"},
     "aggregate_rankings": [
       {"model": "...", "average_rank": 1.33, "rankings_count": 3}
     ]
   },
   "stage3": {
-    "model": "google/gemini-3-pro-preview",
+    "model": "...",
     "synthesis": "..."
   }
 }
 ```
 
-## Your Role
+## Agent Role
 
 1. **Run the script** with the user's question
 2. **Parse the JSON** result
@@ -105,14 +103,13 @@ The script outputs structured JSON to stdout:
 
 ## Environment Setup
 
-The skill requires `OPENROUTER_API_KEY` in a `.env` file in `~/.local/share/llm-council-skill/.env`. If missing, the script will fail with an authentication error.
+The skill requires `OPENROUTER_API_KEY` in the environment or in a `.env` file at the repository root. If missing, the script will fail with an authentication error.
 
 ## Quick Test
 
 To verify setup:
 ```bash
-cd ~/.local/share/llm-council-skill
-uv run python council_run.py "What is 2+2?" --stages 1
+uv run python scripts/run_council.py "What is 2+2?" --stages 1
 ```
 
 Should return JSON with stage1 containing 3 model responses.

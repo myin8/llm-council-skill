@@ -1,6 +1,8 @@
 # Include important documentation
 include README.md
+include SKILL.md
 include LICENSE
+include council_run.py
 include INSTALL.md
 include QUICKSTART.md
 include CLAUDE.md
@@ -11,7 +13,9 @@ include SUMMARY.md
 # Include environment template
 include .env.example
 
-# Include skill definition
+# Include skill definitions
+recursive-include scripts *.py
+recursive-include agents *.yaml
 recursive-include .claude/skills *.md
 
 # Exclude development files

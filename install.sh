@@ -1,5 +1,5 @@
 #!/bin/sh
-# LLM Council Skill Installer
+# LLM Council Agent Skill Installer
 # Usage: ./install.sh [--install-dir DIR] [--help]
 
 set -eu
@@ -31,7 +31,7 @@ parse_args() {
         cat <<EOF
 Usage: install.sh [--install-dir DIR]
 
-Install the LLM Council skill for Claude Code.
+Install the LLM Council Agent Skill.
 
 Options:
   --install-dir DIR    Install to DIR instead of default location
@@ -120,7 +120,7 @@ parse_args "$@"
 require_command git
 download_cmd="$(download_command)"
 
-step "LLM Council Skill Installer"
+step "LLM Council Agent Skill Installer"
 echo ""
 
 # Check if directory exists
@@ -183,11 +183,11 @@ fi
 
 echo "Test the installation:"
 echo "  cd $INSTALL_DIR"
-echo "  uv run python council_run.py 'What is 2+2?' --stages 1"
+echo "  uv run python scripts/run_council.py 'What is 2+2?' --stages 1"
 echo ""
-echo "Use from Claude Code:"
+echo "Use from an Agent Skills-compatible coding agent:"
 echo "  Ask the council: <your question>"
-echo "  /llm-council"
+echo "  Use \$llm-council-skill to compare model perspectives on <topic>"
 echo ""
 
-printf 'LLM Council Skill installed successfully to %s\n' "$INSTALL_DIR"
+printf 'LLM Council Agent Skill installed successfully to %s\n' "$INSTALL_DIR"

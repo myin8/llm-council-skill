@@ -1,0 +1,4 @@
+interface:
+  display_name: "LLM Council"
+  short_description: "Run peer-ranked multi-model deliberations"
+  default_prompt: "Use $llm-council-skill to ask the council for a synthesized answer to this question."
