@@ -50,8 +50,8 @@ async def query_model(
                 'reasoning_details': message.get('reasoning_details')
             }
 
-            # Include full raw response if verbose mode
-            if verbose:
+            # Include full raw response when requested.
+            if include_raw:
                 result['raw_response'] = data
 
             return result

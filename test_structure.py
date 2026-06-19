@@ -4,6 +4,7 @@
 import re
 import sys
 from pathlib import Path
+import asyncio
 
 ALLOWED_FRONTMATTER_KEYS = {
     "name",
@@ -50,6 +51,72 @@ def test_cli_parsing():
         return True
     except Exception as e:
         print(f"✗ CLI test failed: {e}")
+        return False
+
+def test_query_model_raw_flag():
+    """Test query_model response assembly without making network calls."""
+    try:
+        from council import openrouter
+
+        original_client = openrouter.httpx.AsyncClient
+
+        class FakeResponse:
+            def raise_for_status(self):
+                return None
+
+            def json(self):
+                return {
+                    "choices": [
+                        {
+                            "message": {
+                                "content": "ok",
+                                "reasoning_details": [{"type": "summary"}],
+                            }
+                        }
+                    ]
+                }
+
+        class FakeAsyncClient:
+            def __init__(self, *args, **kwargs):
+                pass
+
+            async def __aenter__(self):
+                return self
+
+            async def __aexit__(self, exc_type, exc, tb):
+                return False
+
+            async def post(self, *args, **kwargs):
+                return FakeResponse()
+
+        async def run_check():
+            openrouter.httpx.AsyncClient = FakeAsyncClient
+            try:
+                with_raw = await openrouter.query_model(
+                    "test/model",
+                    [{"role": "user", "content": "hello"}],
+                    include_raw=True,
+                )
+                without_raw = await openrouter.query_model(
+                    "test/model",
+                    [{"role": "user", "content": "hello"}],
+                    include_raw=False,
+                )
+            finally:
+                openrouter.httpx.AsyncClient = original_client
+
+            if with_raw is None or with_raw.get("content") != "ok":
+                raise AssertionError("Expected successful fake model response")
+            if "raw_response" not in with_raw:
+                raise AssertionError("include_raw=True should include raw_response")
+            if "raw_response" in without_raw:
+                raise AssertionError("include_raw=False should omit raw_response")
+
+        asyncio.run(run_check())
+        print("✓ query_model include_raw behavior verified")
+        return True
+    except Exception as e:
+        print(f"✗ query_model raw flag test failed: {e}")
         return False
 
 def parse_frontmatter(path):
@@ -123,6 +190,7 @@ def main():
         ("Module Imports", test_imports),
         ("Configuration", test_config),
         ("CLI Parsing", test_cli_parsing),
+        ("OpenRouter Response Assembly", test_query_model_raw_flag),
         ("Agent Skill Structure", test_agent_skill_structure),
     ]
 
