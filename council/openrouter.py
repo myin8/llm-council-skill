@@ -9,7 +9,7 @@ async def query_model(
     model: str,
     messages: List[Dict[str, str]],
     timeout: float = 120.0,
-    verbose: bool = False
+    include_raw: bool = True
 ) -> Optional[Dict[str, Any]]:
     """
     Query a single model via OpenRouter API.
@@ -18,7 +18,7 @@ async def query_model(
         model: OpenRouter model identifier (e.g., "openai/gpt-4o")
         messages: List of message dicts with 'role' and 'content'
         timeout: Request timeout in seconds
-        verbose: If True, include full raw API response
+        include_raw: If True, include full raw API response
 
     Returns:
         Response dict with 'content' and optional 'reasoning_details' and 'raw_response', or None if failed
@@ -64,7 +64,7 @@ async def query_model(
 async def query_models_parallel(
     models: List[str],
     messages: List[Dict[str, str]],
-    verbose: bool = False
+    include_raw: bool = True
 ) -> Dict[str, Optional[Dict[str, Any]]]:
     """
     Query multiple models in parallel.
@@ -72,7 +72,7 @@ async def query_models_parallel(
     Args:
         models: List of OpenRouter model identifiers
         messages: List of message dicts to send to each model
-        verbose: If True, include full raw API responses
+        include_raw: If True, include full raw API responses
 
     Returns:
         Dict mapping model identifier to response dict (or None if failed)
@@ -80,7 +80,7 @@ async def query_models_parallel(
     import asyncio
 
     # Create tasks for all models
-    tasks = [query_model(model, messages, verbose=verbose) for model in models]
+    tasks = [query_model(model, messages, include_raw=include_raw) for model in models]
 
     # Wait for all to complete
     responses = await asyncio.gather(*tasks)

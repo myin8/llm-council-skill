@@ -8,7 +8,7 @@ from .config import DEFAULT_COUNCIL_MODELS, DEFAULT_CHAIRMAN_MODEL
 async def stage1_collect_responses(
     user_query: str,
     models: Optional[List[str]] = None,
-    verbose: bool = False
+    include_raw: bool = True
 ) -> List[Dict[str, Any]]:
     """
     Stage 1: Collect individual responses from all council models.
@@ -16,7 +16,7 @@ async def stage1_collect_responses(
     Args:
         user_query: The user's question
         models: Optional list of model identifiers (defaults to config)
-        verbose: If True, include full raw API responses
+        include_raw: If True, include full raw API responses
 
     Returns:
         List of dicts with 'model' and 'response' keys (and optionally 'raw_response')
@@ -27,7 +27,7 @@ async def stage1_collect_responses(
     messages = [{"role": "user", "content": user_query}]
 
     # Query all models in parallel
-    responses = await query_models_parallel(models, messages, verbose=verbose)
+    responses = await query_models_parallel(models, messages, include_raw=include_raw)
 
     # Format results
     stage1_results = []
@@ -37,7 +37,7 @@ async def stage1_collect_responses(
                 "model": model,
                 "response": response.get('content', '')
             }
-            if verbose and 'raw_response' in response:
+            if include_raw and 'raw_response' in response:
                 result['raw_response'] = response['raw_response']
             stage1_results.append(result)
 
@@ -48,7 +48,7 @@ async def stage2_collect_rankings(
     user_query: str,
     stage1_results: List[Dict[str, Any]],
     models: Optional[List[str]] = None,
-    verbose: bool = False
+    include_raw: bool = True
 ) -> Tuple[List[Dict[str, Any]], Dict[str, str]]:
     """
     Stage 2: Each model ranks the anonymized responses.
@@ -57,7 +57,7 @@ async def stage2_collect_rankings(
         user_query: The original user query
         stage1_results: Results from Stage 1
         models: Optional list of model identifiers (defaults to config)
-        verbose: If True, include full raw API responses
+        include_raw: If True, include full raw API responses
 
     Returns:
         Tuple of (rankings list, label_to_model mapping)
@@ -114,7 +114,7 @@ Now provide your evaluation and ranking:"""
     messages = [{"role": "user", "content": ranking_prompt}]
 
     # Get rankings from all council models in parallel
-    responses = await query_models_parallel(models, messages, verbose=verbose)
+    responses = await query_models_parallel(models, messages, include_raw=include_raw)
 
     # Format results
     stage2_results = []
@@ -127,7 +127,7 @@ Now provide your evaluation and ranking:"""
                 "evaluation": full_text,
                 "parsed_ranking": parsed
             }
-            if verbose and 'raw_response' in response:
+            if include_raw and 'raw_response' in response:
                 result['raw_response'] = response['raw_response']
             stage2_results.append(result)
 
@@ -139,7 +139,7 @@ async def stage3_synthesize_final(
     stage1_results: List[Dict[str, Any]],
     stage2_results: List[Dict[str, Any]],
     chairman_model: Optional[str] = None,
-    verbose: bool = False
+    include_raw: bool = True
 ) -> Dict[str, Any]:
     """
     Stage 3: Chairman synthesizes final response.
@@ -149,7 +149,7 @@ async def stage3_synthesize_final(
         stage1_results: Individual model responses from Stage 1
         stage2_results: Rankings from Stage 2
         chairman_model: Optional chairman model (defaults to config)
-        verbose: If True, include full raw API response
+        include_raw: If True, include full raw API response
 
     Returns:
         Dict with 'model' and 'synthesis' keys (and optionally 'raw_response')
@@ -188,7 +188,7 @@ Provide a clear, well-reasoned final answer that represents the council's collec
     messages = [{"role": "user", "content": chairman_prompt}]
 
     # Query the chairman model
-    response = await query_model(chairman_model, messages, verbose=verbose)
+    response = await query_model(chairman_model, messages, include_raw=include_raw)
 
     if response is None:
         # Fallback if chairman fails
@@ -202,7 +202,7 @@ Provide a clear, well-reasoned final answer that represents the council's collec
         "synthesis": response.get('content', '')
     }
 
-    if verbose and 'raw_response' in response:
+    if include_raw and 'raw_response' in response:
         result['raw_response'] = response['raw_response']
 
     return result
@@ -294,7 +294,7 @@ async def run_full_council(
     models: Optional[List[str]] = None,
     chairman_model: Optional[str] = None,
     max_stages: int = 3,
-    verbose: bool = False
+    include_raw: bool = True
 ) -> Dict[str, Any]:
     """
     Run the complete 3-stage council process.
@@ -304,7 +304,7 @@ async def run_full_council(
         models: Optional list of council model identifiers
         chairman_model: Optional chairman model identifier
         max_stages: Maximum stage to run (1, 2, or 3)
-        verbose: If True, include full raw API responses with metadata
+        include_raw: If True, include full raw API responses with metadata
 
     Returns:
         Dict with query, models, chairman_model, and stage results
@@ -321,7 +321,7 @@ async def run_full_council(
     }
 
     # Stage 1: Collect individual responses
-    stage1_results = await stage1_collect_responses(user_query, models, verbose=verbose)
+    stage1_results = await stage1_collect_responses(user_query, models, include_raw=include_raw)
 
     if not stage1_results:
         result["error"] = "All models failed to respond. Please try again."
@@ -334,7 +334,7 @@ async def run_full_council(
 
     # Stage 2: Collect rankings
     stage2_results, label_to_model = await stage2_collect_rankings(
-        user_query, stage1_results, models, verbose=verbose
+        user_query, stage1_results, models, include_raw=include_raw
     )
 
     # Calculate aggregate rankings
@@ -355,7 +355,7 @@ async def run_full_council(
         stage1_results,
         stage2_results,
         chairman_model,
-        verbose=verbose
+        include_raw=include_raw
     )
 
     result["stage3"] = stage3_result
