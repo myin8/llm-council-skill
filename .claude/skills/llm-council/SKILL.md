@@ -1,129 +1,134 @@
 ---
 name: llm-council
-description: Run multi-model LLM council deliberations through OpenRouter. Use when the user asks for a council, multi-model comparison, peer-ranked model perspectives, or a synthesized answer that should combine several model responses.
+description: "Run questions through a council of multiple LLMs that independently respond, peer-review each other anonymously, and synthesize a final verdict. Use when: (1) a decision has real stakes and uncertainty, (2) the user asks for 'council', 'multi-model comparison', 'peer-ranked perspectives', or 'what would different models say', (3) exploring tradeoffs or design decisions. Do NOT use for: simple factual lookups, creative tasks, or questions where a single model is sufficient."
 license: MIT
 compatibility: Requires Python 3.10+, project dependencies, OPENROUTER_API_KEY, and network access to OpenRouter.
 metadata:
-  version: "1.2.0"
+  version: "1.3.0"
 ---
 
 # LLM Council
 
-This is the Claude compatibility entry point. The canonical Agent Skill is the repository-root `SKILL.md`, which follows the Agent Skills specification for Codex and other coding agents.
+**Note:** This is the Claude compatibility entry point. The canonical Agent Skill is the repository-root `SKILL.md`, which follows the Agent Skills specification for Codex and other coding agents.
 
-Run a three-stage multi-model deliberation process where different LLMs collaboratively answer a user's question.
+Run a three-stage multi-model deliberation process where different LLMs collaboratively answer a user's question through independent responses, anonymous peer review, and synthesis.
+
+## When to Use
+
+**Good council questions:**
+- "Should I use Postgres or DynamoDB for this use case?"
+- "Which of these 3 API designs is strongest?"
+- "Compare these model outputs — which is more accurate?"
+- "I'm torn between X and Y. What am I not seeing?"
+
+**Skip the council for:**
+- Factual lookups ("What is X?")
+- Creative tasks ("Write me a landing page")
+- Simple style preferences
+- Questions with one right answer
 
 ## Process
 
-- Stage 1: query multiple models independently with the same question.
-- Stage 2: ask models to evaluate and rank anonymized Stage 1 responses.
-- Stage 3: ask a chairman model to synthesize the responses and rankings.
+- **Stage 1:** Query multiple models independently with the same question
+- **Stage 2:** Models evaluate and rank anonymized Stage 1 responses
+- **Stage 3:** Chairman model synthesizes responses and rankings into final verdict
 
 ## Usage
 
-Start from the repository root, then run:
+Start from the repository root (three directories up from this file if loaded from `.claude/skills/llm-council`):
 
 ```bash
 uv run python scripts/run_council.py "<user's question>" [options]
 ```
 
-If this compatibility skill was loaded from `.claude/skills/llm-council`, the repository root is three directories up from this file.
-
-## Options
+### Options
 
 - `--stages N` — Run only stages 1 through N (default: 3)
-  - `--stages 1` — Quick comparison of model responses (no ranking)
-  - `--stages 2` — Include peer evaluation and ranking
-  - `--stages 3` — Full deliberation with final synthesis
-
+  - `--stages 1` — Quick comparison (no ranking or synthesis)
+  - `--stages 2` — Include peer ranking
+  - `--stages 3` — Full deliberation with synthesis
 - `--models MODEL1,MODEL2,...` — Override default council models (comma-separated OpenRouter IDs)
-
 - `--chairman MODEL` — Override default chairman model
-
 - `--query-file FILE` — Read query from file (for longer prompts)
 
 ## Output Format
 
-The script outputs structured JSON to stdout:
+The script returns JSON:
 
 ```json
 {
   "query": "...",
   "models": ["model1", "model2", ...],
   "chairman_model": "...",
-  "stage1": [
-    {"model": "model1", "response": "..."}
-  ],
+  "stage1": [{"model": "...", "response": "..."}],
   "stage2": {
-    "evaluations": [
-      {"model": "...", "evaluation": "...", "parsed_ranking": ["Response C", "Response A", "Response B"]}
-    ],
-    "label_to_model": {"Response A": "model1"},
-    "aggregate_rankings": [
-      {"model": "...", "average_rank": 1.33, "rankings_count": 3}
-    ]
+    "evaluations": [...],
+    "label_to_model": {...},
+    "aggregate_rankings": [{"model": "...", "average_rank": 1.5, "rankings_count": 3}]
   },
-  "stage3": {
-    "model": "...",
-    "synthesis": "..."
-  }
+  "stage3": {"model": "...", "synthesis": "..."}
 }
 ```
 
-## Agent Role
+## Presenting Results
 
-1. **Run the script** with the user's question
-2. **Parse the JSON** result
-3. **Present findings** based on what the user asked for:
-   - If they want the final answer: show `stage3.synthesis`
-   - If they want to see all perspectives: show stage1 responses
-   - If they want rankings: show `stage2.aggregate_rankings`
-   - Default: show synthesis + aggregate rankings in a readable format
-
-### Example Presentation Format
+**Do not dump raw JSON.** Structure the verdict:
 
 ```markdown
-## Council Synthesis
+## Council Verdict: {topic}
 
-[stage3.synthesis content]
+### Where Models Agree
+{Independent convergence points — high-confidence signals}
 
-## Model Rankings (by peer evaluation)
+### Where Models Disagree
+{Genuine conflicts with reasoning from both sides}
 
-1. **[model]** — Average rank: [avg_rank] ([rankings_count] votes)
-2. **[model]** — Average rank: [avg_rank] ([rankings_count] votes)
-3. **[model]** — Average rank: [avg_rank] ([rankings_count] votes)
+### Model Rankings (by Peer Review)
+1. **{model}** — Avg rank: {average_rank} ({rankings_count} votes)
+2. ...
+
+### Synthesis
+{stage3.synthesis content}
+
+### Recommended Next Step
+{One concrete action, if applicable}
 ```
 
-## Edge Cases
-
-- If the script fails (non-zero exit), check stderr for errors
-- If `"error"` key exists in JSON, report it to the user
-- If only stage1 is requested, rankings/synthesis won't be present
-- Empty responses mean model API calls failed (graceful degradation)
+**Rules:**
+- Don't invent missing stages (if only stage 1 was run, don't make up synthesis)
+- Highlight disagreements (conflicts are signal, not noise)
+- Be concise (clarity over completeness)
 
 ## Environment Setup
 
-The skill requires `OPENROUTER_API_KEY` in the environment or in a `.env` file at the repository root. If missing, the script will fail with an authentication error.
+Requires `OPENROUTER_API_KEY` in environment or `.env` at repository root.
 
 ## Quick Test
 
-To verify setup:
 ```bash
 uv run python scripts/run_council.py "What is 2+2?" --stages 1
 ```
 
-Should return JSON with stage1 containing 3 model responses.
+Returns JSON with stage1 containing model responses.
 
-## When to Use
+## When to Use vs Single Model
 
-- User wants multiple AI perspectives on a complex question
-- User wants to see which models perform best on a specific query
-- User wants a synthesized answer that considers multiple viewpoints
-- User explicitly asks for "council", "multi-model", or "deliberation"
+**Use the council when:**
+- Decision has real stakes and uncertainty
+- User explicitly requests "council", "multi-model", or "compare models"
+- Exploring tradeoffs where different perspectives add value
 
-## When NOT to Use
+**Use single model when:**
+- Factual lookup with one right answer
+- Creative/generative task (not a decision)
+- Speed matters (council is slower)
+- No meaningful tradeoffs to explore
 
-- Simple factual lookups (single model is faster)
-- Tasks requiring tool use or code execution
-- Real-time or latency-sensitive queries (council is slower)
-- Questions that don't benefit from multiple perspectives
+If unsure, default to single model. Only invoke council when explicitly requested or when a genuine decision warrants multiple perspectives.
+
+## Edge Cases
+
+- **Script fails:** Report stderr error
+- **JSON has `error` key:** Surface directly
+- **Partial stages:** Don't fabricate missing synthesis/rankings
+- **Model failures:** Present successful responses only
