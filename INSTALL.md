@@ -70,11 +70,31 @@ Expected output from the council runner is JSON with `query`, `models`, `chairma
 
 ## OpenRouter API Key
 
-Create `.env` with:
+The skill checks for the API key in this order:
+1. **Global environment variable** (checked first)
+2. **Project `.env` file** (fallback)
+
+### Option 1: Global Environment (Recommended)
+
+Set the key in your shell profile (`~/.bashrc`, `~/.zshrc`, etc.):
 
 ```bash
-OPENROUTER_API_KEY=your_key_here
+export OPENROUTER_API_KEY=your_key_here
 ```
+
+This makes the key available to all projects and tools.
+
+### Option 2: Project-Specific .env
+
+Create `.env` in the project directory:
+
+```bash
+cd ~/.local/share/llm-council-skill
+cp .env.example .env
+# Edit .env and add: OPENROUTER_API_KEY=your_key_here
+```
+
+Get your key from: https://openrouter.ai/keys
 
 ## Requirements
 

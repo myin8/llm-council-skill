@@ -33,8 +33,14 @@ The root `SKILL.md` follows the Agent Skills specification and can be used by Co
 ```bash
 git clone https://github.com/myin8/llm-council-skill ~/.local/share/llm-council-skill
 cd ~/.local/share/llm-council-skill
+
+# Option 1: Set API key in .env file (project-specific)
 cp .env.example .env
-# Edit .env and add OPENROUTER_API_KEY
+# Edit .env and add OPENROUTER_API_KEY=your_key_here
+
+# Option 2: Set API key globally in your shell profile
+export OPENROUTER_API_KEY=your_key_here
+
 uv sync
 ```
 
@@ -96,7 +102,9 @@ The runner writes progress to stderr and JSON to stdout:
 
 ## Configuration
 
-Set `OPENROUTER_API_KEY` in `.env` or in the environment. Change default models in [council/config.py](council/config.py), or override them per run with `--models` and `--chairman`.
+**API Key:** Set `OPENROUTER_API_KEY` either globally in your environment or in `.env` (global takes precedence). Get a key at https://openrouter.ai/keys
+
+**Models:** Change defaults in [council/config.py](council/config.py), or override per-run with `--models` and `--chairman`.
 
 ## Requirements
 

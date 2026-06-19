@@ -3,9 +3,13 @@
 import os
 from dotenv import load_dotenv
 
-load_dotenv()
+# Load .env file if present, but don't override existing environment variables
+# This allows the API key to be set globally or in .env
+load_dotenv(override=False)
 
-# OpenRouter API key
+# OpenRouter API key - checked in this order:
+# 1. Global environment variable OPENROUTER_API_KEY
+# 2. .env file in project root
 OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY")
 
 # Default council members - list of OpenRouter model identifiers

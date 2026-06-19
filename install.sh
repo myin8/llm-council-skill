@@ -137,13 +137,22 @@ fi
 
 echo ""
 step "Setting up environment file"
-if [ ! -f .env ]; then
+
+# Check if API key is already in environment
+if [ -n "${OPENROUTER_API_KEY:-}" ]; then
+  echo "✓ Using OPENROUTER_API_KEY from environment"
+  needs_key=0
+elif [ ! -f .env ]; then
   cp .env.example .env
   echo "✓ Created .env file"
   echo ""
   warn "IMPORTANT: You need to add your OpenRouter API key!"
-  echo "   Edit $INSTALL_DIR/.env and add:"
-  echo "   OPENROUTER_API_KEY=your_key_here"
+  echo ""
+  echo "   Option 1 (Recommended): Set globally in your shell profile"
+  echo "     export OPENROUTER_API_KEY=your_key_here"
+  echo ""
+  echo "   Option 2: Add to project .env file"
+  echo "     Edit $INSTALL_DIR/.env"
   echo ""
   echo "   Get a key from: https://openrouter.ai/keys"
   echo ""
@@ -173,11 +182,17 @@ step "Installation Complete!"
 echo ""
 
 if [ "$needs_key" -eq 1 ]; then
-  echo "⚠️  NEXT STEP: Add your API key to .env"
+  echo "⚠️  NEXT STEP: Configure your OpenRouter API key"
   echo ""
-  echo "1. Get your key from: https://openrouter.ai/keys"
-  echo "2. Edit $INSTALL_DIR/.env"
-  echo "3. Add: OPENROUTER_API_KEY=your_key_here"
+  echo "Option 1 (Recommended): Set globally"
+  echo "  export OPENROUTER_API_KEY=your_key_here"
+  echo "  # Add to ~/.bashrc or ~/.zshrc to persist"
+  echo ""
+  echo "Option 2: Set in project .env"
+  echo "  Edit $INSTALL_DIR/.env"
+  echo "  Add: OPENROUTER_API_KEY=your_key_here"
+  echo ""
+  echo "Get a key from: https://openrouter.ai/keys"
   echo ""
 fi
 
