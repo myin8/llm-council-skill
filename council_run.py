@@ -19,6 +19,7 @@ Examples:
   %(prog)s "Explain caching strategies" --stages 2
   %(prog)s "Compare Python vs Go" --models "openai/gpt-4o,anthropic/claude-sonnet-4"
   %(prog)s --query-file question.txt
+  %(prog)s "Technical question" --verbose  # Include full API responses
         """
     )
 
@@ -50,6 +51,12 @@ Examples:
         choices=[1, 2, 3],
         default=3,
         help="Maximum stage to run (default: 3)"
+    )
+
+    parser.add_argument(
+        "--verbose",
+        action="store_true",
+        help="Include full raw API responses with metadata (tokens, latency, etc.)"
     )
 
     return parser.parse_args()
@@ -87,7 +94,8 @@ async def main():
             user_query=query,
             models=models,
             chairman_model=args.chairman,
-            max_stages=args.stages
+            max_stages=args.stages,
+            verbose=args.verbose
         )
 
         # JSON output to stdout
